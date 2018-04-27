@@ -1,5 +1,7 @@
 # EG: 
 # personn1, 99944444
 # personn2, 999555550
+<<<<<<< HEAD
 jtedjo,18291414
 ethands,70748407
+
