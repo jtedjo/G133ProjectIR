@@ -33,6 +33,7 @@ class CrawlerFrame(IApplication):
     def __init__(self, frame):
         self.app_id = "JtedjoEthandsJdkang2"
         self.frame = frame
+        self.starttime = time()
 
 
     def initialize(self):
