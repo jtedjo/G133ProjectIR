@@ -12,15 +12,20 @@ from uuid import uuid4
 
 # Additional Imports 
 import bs4
+import django
+from django.conf import settings
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
 import tldextract
 from datetime import datetime
 
+settings.configure(DEBUG=True)
+django.setup()
+
 logger = logging.getLogger(__name__)
 LOG_HEADER = "[CRAWLER]"
 
-CALENDAR_REGEX = "^.*calendar.*$"
+CALENDAR_REGEX = "^.*(c|C)alendar.*$"
 TSUDIK_REGEX = "^.*gts.*$"
 REPEAT_REGEX = "^.*?(/.+?/).*?\1.*$|^.*?/(.+?/)\2.*$"
 EXTRA_DIRS_REGEX = "^.*(/misc|/sites|/all|/themes|/modules|/profiles|/css|/field|/node|/theme){3}.*$"
