@@ -7,7 +7,7 @@ import re, os
 from time import time
 from uuid import uuid4
 
-from urlparse import urlparse, parse_qs
+from urlparse import urlparse, parse_qs, urljoin
 from uuid import uuid4
 
 # Additional Imports 
@@ -81,7 +81,7 @@ def extract_next_links(rawDataObj):
     '''
     #Extract links and add them to outputLinks
     contentSoup = bs4.BeautifulSoup(rawDataObj.content, "lxml")
-    outputLinks = [link['href'] for link in contentSoup('a') if 'href' in link.attrs]
+    outputLinks = [urljoin(rawDataObj.url,link['href']) for link in contentSoup('a') if 'href' in link.attrs]
     numLinks = len(outputLinks)
     #Extract subdomain of raw url
     subdomain = tldextract.extract(rawDataObj.url)[0] #Index '0' refers to subdomain attribute of the returned tuple
