@@ -20,6 +20,10 @@ from datetime import datetime
 logger = logging.getLogger(__name__)
 LOG_HEADER = "[CRAWLER]"
 
+subdomainDictionary = dict() #keeps track how many links belongs to a particular subdomain have been checked/entered
+count_link = 0 #current count of longest outlink
+mostOutLinkURL = "" #current URL with most outlink
+
 CALENDAR_REGEX = "^.*calendar.*$"
 TSUDIK_REGEX = "^.*gts.*$"
 REPEAT_REGEX = "^.*?(/.+?/).*?\1.*$|^.*?/(.+?/)\2.*$"
@@ -79,10 +83,29 @@ def extract_next_links(rawDataObj):
     
     Suggested library: lxml
     '''
+    global subdomainDictionary
+    global count_link
+    global mostOutLinkURL
+
     #Extract links and add them to outputLinks
     contentSoup = bs4.BeautifulSoup(rawDataObj.content, "lxml")
+
+    #increment if subdomain was already seen before, otherwise create the key
+    #need to check if its the same link?
+
+    urlSubdomain = urlparse(rawDataObj.url).hostname;
+    if urlSubdomain in subdomainDictionary:
+        subdomainDictionary[urlSubdomain] +=1;
+    else:
+        subdomainDictionary[urlSubdomain] =1;
+
+
     outputLinks = [urljoin(rawDataObj.url,link['href']) for link in contentSoup('a') if 'href' in link.attrs]
     numLinks = len(outputLinks)
+
+    if (count_link < numLinks):
+        count_link = numLinks
+        mostOutLinkURL = rawDataObj.url;
     #Extract subdomain of raw url
     subdomain = tldextract.extract(rawDataObj.url)[0] #Index '0' refers to subdomain attribute of the returned tuple
     #outfile.close()
