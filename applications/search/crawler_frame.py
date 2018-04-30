@@ -113,6 +113,10 @@ def extract_next_links(rawDataObj):
     #for link in outputLinks:
     #    print "\t"+link
 
+    #writing the particular subdomains number of associated links
+    #file =open("subdomain.txt", "a+")
+    #file.write("subdomain name: "+ urlSubdomain +" subdomain count :%d" % subdomainDictionary.get(urlSubdomain))
+
     return outputLinks
 
 def is_valid(url):
