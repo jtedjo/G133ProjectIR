@@ -25,6 +25,10 @@ django.setup()
 logger = logging.getLogger(__name__)
 LOG_HEADER = "[CRAWLER]"
 
+subdomainDictionary = dict() #keeps track how many links belongs to a particular subdomain have been checked/entered
+count_link = 0 #current count of longest outlink
+mostOutLinkURL = "" #current URL with most outlink
+
 CALENDAR_REGEX = "^.*(c|C)alendar.*$"
 TSUDIK_REGEX = "^.*gts.*$"
 REPEAT_REGEX = "^.*?(/.+?/).*?\1.*$|^.*?/(.+?/)\2.*$"
@@ -70,7 +74,7 @@ class CrawlerFrame(IApplication):
         print (
             "Time time spent this session: ",
             time() - self.starttime, " seconds.")
-    
+
 def extract_next_links(rawDataObj):
     outputLinks = []
     #outfile = open("../../output"+ str(datetime.now()) +".txt", "w")
@@ -84,16 +88,35 @@ def extract_next_links(rawDataObj):
     
     Suggested library: lxml
     '''
+
+    global subdomainDictionary
+    global count_link
+    global mostOutLinkURL
+
     #Extract links and add them to outputLinks
     contentSoup = bs4.BeautifulSoup(rawDataObj.content, "lxml")
     outputLinks = [urljoin(rawDataObj.url,link['href']) for link in contentSoup('a') if 'href' in link.attrs]
     numLinks = len(outputLinks)
     #Extract subdomain of raw url
     subdomain = tldextract.extract(rawDataObj.url)[0] #Index '0' refers to subdomain attribute of the returned tuple
+
+    if subdomain in subdomainDictionary:
+        subdomainDictionary[subdomain] += 1;
+    else:
+        subdomainDictionary[subdomain] = 1;
+
+    if (count_link < numLinks):
+        count_link = numLinks
+        mostOutLinkURL = rawDataObj.url;
+
     #outfile.close()
     #print outputLinks
     #for link in outputLinks:
     #    print "\t"+link
+
+    # writing the particular subdomains number of associated links
+    # file =open("subdomain.txt", "a+")
+    # file.write("subdomain name: "+ urlSubdomain +" subdomain count :%d" % subdomainDictionary.get(urlSubdomain))
 
     return outputLinks
 
