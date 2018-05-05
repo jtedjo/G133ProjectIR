@@ -109,7 +109,12 @@ def extract_next_links(rawDataObj):
     global mostOutLinkURL
     #Extract links and add them to outputLinks
     contentSoup = bs4.BeautifulSoup(rawDataObj.content, "lxml")
-    outputLinks = [urljoin(rawDataObj.url,link['href']) for link in contentSoup('a') if 'href' in link.attrs]
+    #incase the url is redirected, need to use different baseURL for the join
+    if rawDataObj.is_redirected and len(rawDataObj.final_url) > 0:
+        baseUrl = rawDataObj.final_url
+    else:
+        baseUrl = rawDataObj.url
+    outputLinks = [urljoin(baseUrl,link['href']) for link in contentSoup('a') if 'href' in link.attrs]
     numLinks = len(outputLinks)
     #Extract subdomain of raw url
     subdomain = tldextract.extract(rawDataObj.url)[0] #Index '0' refers to subdomain attribute of the returned tuple
