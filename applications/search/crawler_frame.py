@@ -71,6 +71,21 @@ class CrawlerFrame(IApplication):
                     self.frame.add(JtedjoEthandsJdkang2Link(l))
 
     def shutdown(self):
+        global subdomainDictionary
+        global count_link
+        global mostOutLinkURL
+
+        # writing the particular subdomains number of associated links
+        file =open("subdomain.txt", "a+")
+        for urlSubdomain in subdomainDictionary:
+            file.write("subdomain name: "+ urlSubdomain +" subdomain count :%d" % subdomainDictionary.get(urlSubdomain))
+        file.close()
+
+        file2 = open("mostOutlink.txt", "a+")
+        file2.write("URL with most outlink :" + mostOutLinkUrl + " with number of :%d" %count_link)
+        file2.close()
+
+
         print (
             "Time time spent this session: ",
             time() - self.starttime, " seconds.")
@@ -92,7 +107,6 @@ def extract_next_links(rawDataObj):
     global subdomainDictionary
     global count_link
     global mostOutLinkURL
-
     #Extract links and add them to outputLinks
     contentSoup = bs4.BeautifulSoup(rawDataObj.content, "lxml")
     outputLinks = [urljoin(rawDataObj.url,link['href']) for link in contentSoup('a') if 'href' in link.attrs]
