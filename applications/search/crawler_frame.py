@@ -30,7 +30,7 @@ count_link = 0 #current count of longest outlink
 mostOutLinkURL = "" #current URL with most outlink
 
 CALENDAR_REGEX = "^.*(c|C)alendar.*$"
-TSUDIK_REGEX = "^.*gts.*$"
+WICS_REGEX = "^.*?afg.*$"
 REPEAT_REGEX = "^.*?(/.+?/).*?\1.*$|^.*?/(.+?/)\2.*$"
 EXTRA_DIRS_REGEX = "^.*(/misc|/sites|/all|/themes|/modules|/profiles|/css|/field|/node|/theme){3}.*$"
 
@@ -153,7 +153,7 @@ def is_valid(url):
         #print "Returned false in first if block in is_valid"
         return False
     #Check if the url leads to a calendar, self-repeating directories, or superfluous directories
-    if(re.match(CALENDAR_REGEX, url) or re.match(REPEAT_REGEX, url) or re.match(EXTRA_DIRS_REGEX, url) or re.match(TSUDIK_REGEX, url)):
+    if(re.match(CALENDAR_REGEX, url) or re.match(REPEAT_REGEX, url) or re.match(EXTRA_DIRS_REGEX, url) or re.match(WICS_REGEX, url)):
         #print "Returned false in the second if block in is_valid"
         return False
     try:
